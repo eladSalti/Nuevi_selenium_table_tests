@@ -1,0 +1,43 @@
+1. Query to display all "Refund" TransactionIds from the last 30 days that do not have a RelatedTransactionId:
+SELECT TransactionId
+FROM Transactions
+WHERE TrxTypeId = 103
+  AND TransactionDate >= DATEADD(day, -30, GETDATE())
+  AND RelatedTransactionId IS NULL;
+
+=======================================================================================================================
+
+2. Query to display all ResponseCodes, with no repeats, for "Sale" and "Auth" transactions from the last 30 days:
+SELECT DISTINCT ResponseCode
+FROM Transactions
+WHERE TrxTypeId IN (100, 101)
+  AND TransactionDate >= DATEADD(day, -30, GETDATE());
+
+=======================================================================================================================
+
+3. Query to display the 100 most recent transactions for client 123, with the specified columns:
+SELECT TOP 100
+    T.TransactionId,
+    T.TransactionDate,
+    T.Amount,
+    C.Currency AS CurrencyName,
+    TT.Description AS TransactionTypeId,
+    TR.Description AS TransactionResultId,
+    RC.Description AS ResponseDescription
+FROM Transactions AS T
+JOIN Currencies AS C ON T.Currency = C.CurrencyCode
+JOIN TrxTypeIds AS TT ON T.TrxTypeId = TT.TrxTypeId
+JOIN TrxResultIds AS TR ON T.TrxResultId = TR.TrxResultId
+LEFT JOIN ResponseCodes AS RC ON T.ResponseCode = RC.ResponseCode
+WHERE T.ClientId = 123
+ORDER BY T.TransactionDate DESC;
+
+=======================================================================================================================
+
+4. Query to display all transactions from the last day where the Amount's exponent in the Transactions Table is bigger
+   than the allowed exponent in the Currencies table:
+SELECT T.*
+FROM Transactions AS T
+JOIN Currencies AS C ON T.Currency = C.CurrencyCode
+WHERE T.TransactionDate >= DATEADD(day, -1, GETDATE())
+  AND POWER(10, C.Exponent) < ABS(T.Amount);
