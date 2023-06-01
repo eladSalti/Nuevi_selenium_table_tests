@@ -1,12 +1,13 @@
-import re
 from selenium.webdriver.support.color import Color
 import webcolors
+from datetime import datetime
 
-
-def validate_date_format(date_text):
-    # Using regex pattern to check if the value is in the correct date format
-    pattern = r"\d{2}-\d{2}-\d{4} \d{2}:\d{2}"
-    return bool(re.match(pattern, date_text))
+def validate_date_format(date_string):
+    try:
+        datetime.strptime(date_string, "%d-%m-%Y %H:%M")
+        return True
+    except ValueError:
+        return False
 
 
 def validate_amount_value_format(amount_value):

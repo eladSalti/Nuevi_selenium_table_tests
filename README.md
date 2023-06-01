@@ -3,3 +3,6 @@ run the following command - $ pytest --html=report.html. This command will run a
 pytest html report.
 If you want to run a single test run the following command - $ pytest -m <The test name>, you can find the tests name
 in the test body @pytest.mark.<test name>.
+
+
+
